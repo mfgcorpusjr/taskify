@@ -9,6 +9,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Colors = {
   primary: string;
+  info: string;
+  success: string;
+  warning: string;
+  danger: string;
   background: string;
   container: string;
   text: string;
@@ -16,7 +20,11 @@ type Colors = {
 };
 
 const lightColors: Colors = {
-  primary: "#525298",
+  primary: "#2355E0",
+  info: "#32A7E2",
+  success: "#22B07D",
+  warning: "#FF8700",
+  danger: "#E0312F",
   background: "#F3F3F7",
   container: "#FFFFFF",
   text: "#1F2937",
@@ -24,7 +32,11 @@ const lightColors: Colors = {
 };
 
 const darkColors: Colors = {
-  primary: "#525298",
+  primary: "#2355E0",
+  info: "#32A7E2",
+  success: "#22B07D",
+  warning: "#FF8700",
+  danger: "#E0312F",
   background: "#1F1D2D",
   container: "#252836",
   text: "#F3F4F6",
