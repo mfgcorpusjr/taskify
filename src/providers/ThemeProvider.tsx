@@ -26,13 +26,15 @@ const lightColors: Colors = {
 const darkColors: Colors = {
   primary: "#525298",
   background: "#1F1D2D",
-  container: "#262837",
+  container: "#252836",
   text: "#F3F4F6",
   textMuted: "#9CA3AF",
 };
 
+type ThemeType = "light" | "dark";
+
 type ThemeContextType = {
-  theme: string;
+  theme: ThemeType;
   toggleTheme: () => void;
   colors: Colors;
 };
@@ -40,12 +42,12 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export default function ThemeProvider({ children }: PropsWithChildren) {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState<ThemeType>("light");
 
   useEffect(() => {
     const getTheme = async () => {
       const value = await AsyncStorage.getItem("theme");
-      if (value) setTheme(value);
+      if (value) setTheme(value as ThemeType);
     };
 
     getTheme();
