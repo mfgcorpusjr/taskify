@@ -1,8 +1,8 @@
 import { StyleSheet, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useQuery } from "@tanstack/react-query";
 
+import Wrapper from "@/components/common/Wrapper";
 import Header from "@/components/common/Header";
 import IconButton from "@/components/ui/IconButton";
 import ProgressStats from "@/components/settings/ProgressStats";
@@ -22,9 +22,9 @@ export default function SettingsScreen() {
   const activeTodos = totalTodos - completedTodos;
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <Wrapper>
       <ScrollView
-        contentContainerStyle={styles.scrollView}
+        contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
         <Header
@@ -48,17 +48,12 @@ export default function SettingsScreen() {
 
         <DangerZone totalTodos={totalTodos} />
       </ScrollView>
-    </SafeAreaView>
+    </Wrapper>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 16,
-    paddingHorizontal: 16,
-  },
-  scrollView: {
     flexGrow: 1,
     gap: 40,
   },
