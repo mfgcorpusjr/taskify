@@ -16,6 +16,7 @@ export default function TodoForm() {
         value={input}
         onChangeText={setInput}
         placeholder="What needs to be done?"
+        multiline
         autoCorrect={false}
         autoCapitalize="none"
       />
