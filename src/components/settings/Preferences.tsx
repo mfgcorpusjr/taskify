@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import Section from "@/components/common/Section";
 import PreferencesItem from "@/components/settings/PreferencesItem";
 import IconButton from "@/components/ui/IconButton";
 
+import { useThemeContext } from "@/providers/ThemeProvider";
+
 export default function Preferences() {
+  const { theme, toggleTheme } = useThemeContext();
+
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isNotifications, setIsNotifications] = useState(false);
   const [autoSync, setAutoSync] = useState(false);
+
+  useEffect(() => {
+    if (theme) setIsDarkMode(theme === "dark");
+  }, [theme]);
 
   return (
     <Section title="Preferences">
@@ -19,7 +27,7 @@ export default function Preferences() {
         title="Dark Mode"
         switchType="primary"
         value={isDarkMode}
-        onValueChange={setIsDarkMode}
+        onValueChange={toggleTheme}
       />
 
       <PreferencesItem

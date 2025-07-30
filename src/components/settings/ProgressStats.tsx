@@ -4,7 +4,17 @@ import Section from "@/components/common/Section";
 import IconButton from "@/components/ui/IconButton";
 import ProgressStatsItem from "@/components/settings/ProgressStatsItem";
 
-export default function ProgressStats() {
+type ProgressStatsProps = {
+  totalTodos: number;
+  completedTodos: number;
+  activeTodos: number;
+};
+
+export default function ProgressStats({
+  totalTodos,
+  completedTodos,
+  activeTodos,
+}: ProgressStatsProps) {
   return (
     <Section title="Progress Stats">
       <ProgressStatsItem
@@ -14,7 +24,7 @@ export default function ProgressStats() {
             rounded
           />
         }
-        title={4}
+        title={totalTodos}
         subTitle="Total Todos"
         borderType="primary"
       />
@@ -27,7 +37,7 @@ export default function ProgressStats() {
             rounded
           />
         }
-        title={2}
+        title={completedTodos}
         subTitle="Completed"
         borderType="success"
       />
@@ -40,7 +50,7 @@ export default function ProgressStats() {
             rounded
           />
         }
-        title={2}
+        title={activeTodos}
         subTitle="Active"
         borderType="warning"
       />

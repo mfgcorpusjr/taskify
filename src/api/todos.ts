@@ -1,0 +1,22 @@
+import { supabase } from "@/lib/supabase";
+
+export const getTodos = async () => {
+  const { data } = await supabase
+    .from("todos")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .throwOnError();
+
+  return data;
+};
+
+export const deleteTodos = async () => {
+  const { data } = await supabase
+    .from("todos")
+    .delete()
+    .neq("id", 0)
+    .select()
+    .throwOnError();
+
+  return data;
+};
