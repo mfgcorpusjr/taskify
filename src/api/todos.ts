@@ -10,6 +10,12 @@ export const getTodos = async () => {
   return data;
 };
 
+export const createTodo = async (text: string) => {
+  const { data } = await supabase.from("todos").insert({ text }).throwOnError();
+
+  return data;
+};
+
 export const deleteTodos = async () => {
   const { data } = await supabase
     .from("todos")

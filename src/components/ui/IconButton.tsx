@@ -38,6 +38,7 @@ export default function IconButton({
       alignSelf: "flex-start",
       borderRadius: rounded ? 100 : 12,
       backgroundColor: colors[type],
+      opacity: rest.disabled ? 0.5 : 1,
     },
     sizeStyle[size],
   ];
