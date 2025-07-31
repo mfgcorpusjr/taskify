@@ -1,6 +1,5 @@
 import { StyleSheet, ScrollView } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useQuery } from "@tanstack/react-query";
 
 import Wrapper from "@/components/common/Wrapper";
 import Header from "@/components/common/Header";
@@ -9,13 +8,10 @@ import ProgressStats from "@/components/settings/ProgressStats";
 import Preferences from "@/components/settings/Preferences";
 import DangerZone from "@/components/settings/DangerZone";
 
-import * as TodosAPI from "@/api/todos";
+import useTodoList from "@/hooks/useTodoList";
 
 export default function SettingsScreen() {
-  const { data } = useQuery({
-    queryKey: ["todos"],
-    queryFn: TodosAPI.getTodos,
-  });
+  const { data } = useTodoList();
 
   const totalTodos = data?.length || 0;
   const completedTodos = data?.filter((d) => d.is_completed).length || 0;

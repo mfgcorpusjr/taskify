@@ -1,6 +1,4 @@
-import { useState, useCallback } from "react";
 import { FlatList, ActivityIndicator, RefreshControl } from "react-native";
-import { useInfiniteQuery } from "@tanstack/react-query";
 
 import Wrapper from "@/components/common/Wrapper";
 import HomeHeader from "@/components/home/HomeHeader";
@@ -8,37 +6,18 @@ import ListEmpty from "@/components/home/ListEmpty";
 import TodoListItem from "@/components/home/TodoListItem";
 
 import { useThemeContext } from "@/providers/ThemeProvider";
-import * as TodosAPI from "@/api/todos";
+import usePaginatedTodoList from "@/hooks/usePaginatedTodoList";
 
 export default function HomeScreen() {
   const {
-    data,
     isLoading,
+    data,
+    isRefetching,
     refetch,
     hasNextPage,
-    fetchNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["todos", { paginated: true }],
-    queryFn: ({ pageParam }) => TodosAPI.getPaginatedTodos(pageParam),
-    initialPageParam: { offset: 0, limit: 10 },
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined;
-
-      return {
-        offset: allPages.flat().length,
-        limit: 10,
-      };
-    },
-  });
-
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const handleUserRefresh = useCallback(async () => {
-    setIsRefreshing(true);
-    await refetch();
-    setIsRefreshing(false);
-  }, [refetch]);
+    fetchNextPage,
+  } = usePaginatedTodoList();
 
   const { colors } = useThemeContext();
 
@@ -50,8 +29,8 @@ export default function HomeScreen() {
         renderItem={({ item }) => <TodoListItem todo={item} />}
         refreshControl={
           <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={handleUserRefresh}
+            refreshing={isRefetching}
+            onRefresh={refetch}
             tintColor={colors.text}
           />
         }
