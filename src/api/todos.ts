@@ -43,3 +43,13 @@ export const deleteTodos = async () => {
 
   return data;
 };
+
+export const toggleTodo = async (id: number, value: boolean) => {
+  const { data } = await supabase
+    .from("todos")
+    .update({ is_completed: value })
+    .eq("id", id)
+    .throwOnError();
+
+  return data;
+};

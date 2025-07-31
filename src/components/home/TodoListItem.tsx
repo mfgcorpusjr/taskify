@@ -1,11 +1,14 @@
 import { StyleSheet, View, Text } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 import Card from "@/components/common/Card";
 import IconButton from "../ui/IconButton";
 
 import { Tables } from "@/types/database.types";
 import { useThemeContext } from "@/providers/ThemeProvider";
+
+import * as TodosAPI from "@/api/todos";
 
 type TodoListItemProps = {
   todo: Tables<"todos">;
@@ -14,13 +17,23 @@ type TodoListItemProps = {
 export default function TodoListItem({ todo }: TodoListItemProps) {
   const { colors } = useThemeContext();
 
+  const queryClient = useQueryClient();
+
+  const { mutate: toggleTodo } = useMutation({
+    mutationFn: () => TodosAPI.toggleTodo(todo.id, !todo.is_completed),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+
   return (
     <Card>
       <View style={styles.container}>
         <Ionicons
-          name={todo.is_completed ? "checkmark-circle" : "pause-circle"}
+          name="checkmark-circle"
           size={38}
           color={todo.is_completed ? colors.success : colors.textMuted}
+          onPress={() => toggleTodo()}
         />
 
         <View style={{ gap: 16 }}>

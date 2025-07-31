@@ -40,8 +40,6 @@ export default function HomeScreen() {
         data={data?.pages.flat() || []}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <TodoListItem todo={item} />}
-        onRefresh={refetch}
-        refreshing={isRefetching}
         onEndReached={() =>
           !isFetchingNextPage && hasNextPage && fetchNextPage()
         }
