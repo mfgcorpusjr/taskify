@@ -1,54 +1,64 @@
-import { StyleSheet, View } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useQuery } from "@tanstack/react-query";
+import { FlatList, ActivityIndicator } from "react-native";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 import Wrapper from "@/components/common/Wrapper";
-import Header from "@/components/common/Header";
-import IconButton from "@/components/ui/IconButton";
-import ProgressBar from "@/components/home/ProgressBar";
-import CreateTodoForm from "@/components/home/CreateTodoForm";
+import HomeHeader from "@/components/home/HomeHeader";
+import ListEmpty from "@/components/home/ListEmpty";
+import TodoListItem from "@/components/home/TodoListItem";
 
+import { useThemeContext } from "@/providers/ThemeProvider";
 import * as TodosAPI from "@/api/todos";
 
 export default function HomeScreen() {
-  const { data } = useQuery({
-    queryKey: ["todos"],
-    queryFn: TodosAPI.getTodos,
+  const {
+    data,
+    isLoading,
+    refetch,
+    isRefetching,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["todos", { paginated: true }],
+    queryFn: ({ pageParam }) => TodosAPI.getPaginatedTodos(pageParam),
+    initialPageParam: { offset: 0, limit: 10 },
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length === 0) return undefined;
+
+      return {
+        offset: allPages.flat().length,
+        limit: 10,
+      };
+    },
   });
 
-  const totalTodos = data?.length || 0;
-  const completedTodos = data?.filter((d) => d.is_completed).length || 0;
-  const progressBarValue = !!totalTodos
-    ? Math.floor((completedTodos / totalTodos) * 100)
-    : 0;
+  const { colors } = useThemeContext();
 
   return (
     <Wrapper>
-      <View style={styles.container}>
-        <Header
-          icon={
-            <IconButton
-              icon={<Ionicons name="flash" size={26} color="white" />}
-              size="lg"
-              type="info"
-            />
-          }
-          title="Today's Tasks 👀"
-          subTitle={`${completedTodos} of ${totalTodos} completed`}
-        />
-
-        <ProgressBar value={progressBarValue} />
-
-        <CreateTodoForm />
-      </View>
+      <FlatList
+        data={data?.pages.flat() || []}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <TodoListItem todo={item} />}
+        onRefresh={refetch}
+        refreshing={isRefetching}
+        onEndReached={() =>
+          !isFetchingNextPage && hasNextPage && fetchNextPage()
+        }
+        ListHeaderComponent={() => <HomeHeader />}
+        ListFooterComponent={
+          isFetchingNextPage ? <ActivityIndicator color={colors.text} /> : null
+        }
+        ListEmptyComponent={() => (
+          <ListEmpty
+            isLoading={isLoading}
+            title="No todos yet"
+            subTitle="Add your first todo above to get started"
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ gap: 16, padding: 16 }}
+      />
     </Wrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    gap: 20,
-    padding: 16,
-  },
-});

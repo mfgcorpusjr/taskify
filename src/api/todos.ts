@@ -10,6 +10,23 @@ export const getTodos = async () => {
   return data;
 };
 
+export const getPaginatedTodos = async ({
+  offset = 0,
+  limit = 10,
+}: {
+  offset?: number;
+  limit?: number;
+}) => {
+  const { data } = await supabase
+    .from("todos")
+    .select("*")
+    .order("id", { ascending: false })
+    .range(offset, offset + limit - 1)
+    .throwOnError();
+
+  return data;
+};
+
 export const createTodo = async (text: string) => {
   const { data } = await supabase.from("todos").insert({ text }).throwOnError();
 
