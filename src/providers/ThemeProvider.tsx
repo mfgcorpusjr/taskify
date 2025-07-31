@@ -17,6 +17,8 @@ type Colors = {
   container: string;
   text: string;
   textMuted: string;
+  button: string;
+  buttonText: string;
 };
 
 const lightColors: Colors = {
@@ -29,6 +31,8 @@ const lightColors: Colors = {
   container: "#FFFFFF",
   text: "#1F2937",
   textMuted: "#6B7280",
+  button: "#F3F3F7",
+  buttonText: "#1F2937",
 };
 
 const darkColors: Colors = {
@@ -41,6 +45,8 @@ const darkColors: Colors = {
   container: "#252836",
   text: "#F3F4F6",
   textMuted: "#9CA3AF",
+  button: "#1F1D2D",
+  buttonText: "#F3F4F6",
 };
 
 type ThemeType = "light" | "dark";
