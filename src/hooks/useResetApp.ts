@@ -52,7 +52,7 @@ const useResetApp = (totalTodos: number) => {
   };
 
   return {
-    reset: handleResetApp,
+    resetApp: handleResetApp,
   };
 };
 

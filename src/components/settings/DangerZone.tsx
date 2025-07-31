@@ -15,11 +15,11 @@ type DangerZoneProps = {
 export default function DangerZone({ totalTodos }: DangerZoneProps) {
   const { colors } = useThemeContext();
 
-  const { reset } = useResetApp(totalTodos);
+  const { resetApp } = useResetApp(totalTodos);
 
   return (
     <Section title="Danger Zone" titleStyle={{ color: colors.danger }}>
-      <Pressable onPress={reset}>
+      <Pressable onPress={resetApp}>
         <Card>
           <View style={styles.container}>
             <IconButton

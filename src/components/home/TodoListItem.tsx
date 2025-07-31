@@ -1,14 +1,13 @@
-import { StyleSheet, View, Text, Alert } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 import Card from "@/components/common/Card";
 import IconButton from "../ui/IconButton";
 
 import { Tables } from "@/types/database.types";
 import { useThemeContext } from "@/providers/ThemeProvider";
-
-import * as TodosAPI from "@/api/todos";
+import useToggleTodo from "@/hooks/useToggleTodo";
+import useDeleteTodo from "@/hooks/useDeleteTodo";
 
 type TodoListItemProps = {
   todo: Tables<"todos">;
@@ -17,28 +16,8 @@ type TodoListItemProps = {
 export default function TodoListItem({ todo }: TodoListItemProps) {
   const { colors } = useThemeContext();
 
-  const queryClient = useQueryClient();
-
-  const { mutate: toggleTodo } = useMutation({
-    mutationFn: () => TodosAPI.toggleTodo(todo.id, !todo.is_completed),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-    },
-  });
-
-  const { mutate: deleteTodo } = useMutation({
-    mutationFn: () => TodosAPI.deleteTodo(todo.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-    },
-  });
-
-  const handleDeleteTodo = () => {
-    Alert.alert("Delete Todo", "Are you sure you want to delete this todo?", [
-      { text: "Cancel", style: "default" },
-      { text: "Delete", style: "destructive", onPress: () => deleteTodo() },
-    ]);
-  };
+  const { toggleTodo } = useToggleTodo(todo);
+  const { deleteTodo } = useDeleteTodo(todo);
 
   return (
     <Card>
@@ -65,7 +44,7 @@ export default function TodoListItem({ todo }: TodoListItemProps) {
               size="sm"
               type="danger"
               rounded
-              onPress={handleDeleteTodo}
+              onPress={() => deleteTodo()}
             />
           </View>
         </View>
