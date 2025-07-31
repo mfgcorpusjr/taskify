@@ -56,5 +56,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     gap: 40,
+    padding: 16,
   },
 });

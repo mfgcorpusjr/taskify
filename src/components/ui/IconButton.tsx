@@ -8,12 +8,18 @@ type Size = "sm" | "md" | "lg";
 const sizeStyle: Record<Size, StyleProp<ViewStyle>> = {
   sm: {
     padding: 6,
+    width: 32,
+    height: 32,
   },
   md: {
     padding: 8,
+    width: 40,
+    height: 40,
   },
   lg: {
     padding: 10,
+    width: 48,
+    height: 48,
   },
 };
 
@@ -35,7 +41,8 @@ export default function IconButton({
 
   const styles: StyleProp<ViewStyle> = [
     {
-      alignSelf: "flex-start",
+      justifyContent: "center",
+      alignItems: "center",
       borderRadius: rounded ? 100 : 12,
       backgroundColor: colors[type],
       opacity: rest.disabled ? 0.5 : 1,

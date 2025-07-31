@@ -6,7 +6,7 @@ import IconButton from "@/components/ui/IconButton";
 
 import useCreateTodo from "@/hooks/useCreateTodo";
 
-export default function TodoForm() {
+export default function CreateTodoForm() {
   const { input, setInput, create } = useCreateTodo();
 
   return (
@@ -21,14 +21,12 @@ export default function TodoForm() {
         autoCapitalize="none"
       />
 
-      <View>
-        <IconButton
-          icon={<Ionicons name="add" size={22} color="white" />}
-          type="info"
-          disabled={input.trim().length === 0}
-          onPress={() => create()}
-        />
-      </View>
+      <IconButton
+        icon={<Ionicons name="add" size={22} color="white" />}
+        type="info"
+        disabled={input.trim().length === 0}
+        onPress={() => create()}
+      />
     </View>
   );
 }

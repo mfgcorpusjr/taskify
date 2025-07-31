@@ -6,7 +6,7 @@ import Wrapper from "@/components/common/Wrapper";
 import Header from "@/components/common/Header";
 import IconButton from "@/components/ui/IconButton";
 import ProgressBar from "@/components/home/ProgressBar";
-import TodoForm from "@/components/home/TodoForm";
+import CreateTodoForm from "@/components/home/CreateTodoForm";
 
 import * as TodosAPI from "@/api/todos";
 
@@ -39,7 +39,7 @@ export default function HomeScreen() {
 
         <ProgressBar value={progressBarValue} />
 
-        <TodoForm />
+        <CreateTodoForm />
       </View>
     </Wrapper>
   );
@@ -49,5 +49,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     gap: 20,
+    padding: 16,
   },
 });
