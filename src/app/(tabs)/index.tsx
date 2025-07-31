@@ -1,4 +1,5 @@
-import { FlatList, ActivityIndicator } from "react-native";
+import { useState, useCallback } from "react";
+import { FlatList, ActivityIndicator, RefreshControl } from "react-native";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import Wrapper from "@/components/common/Wrapper";
@@ -10,20 +11,34 @@ import { useThemeContext } from "@/providers/ThemeProvider";
 import * as TodosAPI from "@/api/todos";
 
 export default function HomeScreen() {
-  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: ["todos", { paginated: true }],
-      queryFn: ({ pageParam }) => TodosAPI.getPaginatedTodos(pageParam),
-      initialPageParam: { offset: 0, limit: 10 },
-      getNextPageParam: (lastPage, allPages) => {
-        if (lastPage.length === 0) return undefined;
+  const {
+    data,
+    isLoading,
+    refetch,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["todos", { paginated: true }],
+    queryFn: ({ pageParam }) => TodosAPI.getPaginatedTodos(pageParam),
+    initialPageParam: { offset: 0, limit: 10 },
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length === 0) return undefined;
 
-        return {
-          offset: allPages.flat().length,
-          limit: 10,
-        };
-      },
-    });
+      return {
+        offset: allPages.flat().length,
+        limit: 10,
+      };
+    },
+  });
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleUserRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  }, [refetch]);
 
   const { colors } = useThemeContext();
 
@@ -33,6 +48,13 @@ export default function HomeScreen() {
         data={data?.pages.flat() || []}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <TodoListItem todo={item} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleUserRefresh}
+            tintColor={colors.text}
+          />
+        }
         onEndReached={() =>
           !isFetchingNextPage && hasNextPage && fetchNextPage()
         }
