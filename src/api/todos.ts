@@ -33,6 +33,17 @@ export const createTodo = async (text: string) => {
   return data;
 };
 
+export const deleteTodo = async (id: number) => {
+  const { data } = await supabase
+    .from("todos")
+    .delete()
+    .eq("id", id)
+    .select()
+    .throwOnError();
+
+  return data;
+};
+
 export const deleteTodos = async () => {
   const { data } = await supabase
     .from("todos")

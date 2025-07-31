@@ -10,27 +10,20 @@ import { useThemeContext } from "@/providers/ThemeProvider";
 import * as TodosAPI from "@/api/todos";
 
 export default function HomeScreen() {
-  const {
-    data,
-    isLoading,
-    refetch,
-    isRefetching,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["todos", { paginated: true }],
-    queryFn: ({ pageParam }) => TodosAPI.getPaginatedTodos(pageParam),
-    initialPageParam: { offset: 0, limit: 10 },
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined;
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["todos", { paginated: true }],
+      queryFn: ({ pageParam }) => TodosAPI.getPaginatedTodos(pageParam),
+      initialPageParam: { offset: 0, limit: 10 },
+      getNextPageParam: (lastPage, allPages) => {
+        if (lastPage.length === 0) return undefined;
 
-      return {
-        offset: allPages.flat().length,
-        limit: 10,
-      };
-    },
-  });
+        return {
+          offset: allPages.flat().length,
+          limit: 10,
+        };
+      },
+    });
 
   const { colors } = useThemeContext();
 

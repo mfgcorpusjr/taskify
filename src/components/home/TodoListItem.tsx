@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 
@@ -26,6 +26,20 @@ export default function TodoListItem({ todo }: TodoListItemProps) {
     },
   });
 
+  const { mutate: deleteTodo } = useMutation({
+    mutationFn: () => TodosAPI.deleteTodo(todo.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+
+  const handleDeleteTodo = () => {
+    Alert.alert("Delete Todo", "Are you sure you want to delete this todo?", [
+      { text: "Cancel", style: "default" },
+      { text: "Delete", style: "destructive", onPress: () => deleteTodo() },
+    ]);
+  };
+
   return (
     <Card>
       <View style={styles.container}>
@@ -51,6 +65,7 @@ export default function TodoListItem({ todo }: TodoListItemProps) {
               size="sm"
               type="danger"
               rounded
+              onPress={handleDeleteTodo}
             />
           </View>
         </View>
