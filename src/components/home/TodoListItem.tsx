@@ -1,13 +1,14 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import Card from "@/components/common/Card";
-import IconButton from "../ui/IconButton";
+import TodoDetails from "@/components/home/TodoDetails";
+import UpdateTodoForm from "@/components/home/UpdateTodoForm";
 
-import { Tables } from "@/types/database.types";
 import { useThemeContext } from "@/providers/ThemeProvider";
 import useToggleTodo from "@/hooks/useToggleTodo";
-import useDeleteTodo from "@/hooks/useDeleteTodo";
+import useTodoStore from "@/store/useTodoStore";
+import { Tables } from "@/types/database.types";
 
 type TodoListItemProps = {
   todo: Tables<"todos">;
@@ -17,7 +18,8 @@ export default function TodoListItem({ todo }: TodoListItemProps) {
   const { colors } = useThemeContext();
 
   const { toggleTodo } = useToggleTodo(todo);
-  const { deleteTodo } = useDeleteTodo(todo);
+
+  const selectedTodo = useTodoStore((state) => state.selectedTodo);
 
   return (
     <Card>
@@ -29,25 +31,11 @@ export default function TodoListItem({ todo }: TodoListItemProps) {
           onPress={() => toggleTodo()}
         />
 
-        <View style={{ gap: 16 }}>
-          <Text style={[styles.text, { color: colors.text }]}>{todo.text}</Text>
-
-          <View style={styles.actionsContainer}>
-            <IconButton
-              icon={<Ionicons name="pencil" size={18} color="white" />}
-              size="sm"
-              type="warning"
-              rounded
-            />
-            <IconButton
-              icon={<Ionicons name="trash" size={18} color="white" />}
-              size="sm"
-              type="danger"
-              rounded
-              onPress={() => deleteTodo()}
-            />
-          </View>
-        </View>
+        {todo.id === selectedTodo?.id ? (
+          <UpdateTodoForm />
+        ) : (
+          <TodoDetails todo={todo} />
+        )}
       </View>
     </Card>
   );
@@ -57,14 +45,5 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     gap: 16,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  actionsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
   },
 });

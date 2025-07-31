@@ -13,7 +13,10 @@ export default function Button({ text, icon, ...rest }: ButtonProps) {
   return (
     <Pressable
       {...rest}
-      style={[styles.container, { backgroundColor: colors.button }]}
+      style={[
+        styles.container,
+        { opacity: rest.disabled ? 0.5 : 1, backgroundColor: colors.button },
+      ]}
     >
       {icon}
 

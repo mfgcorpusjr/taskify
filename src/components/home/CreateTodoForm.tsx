@@ -19,6 +19,7 @@ export default function CreateTodoForm() {
         multiline
         autoCorrect={false}
         autoCapitalize="none"
+        scrollEnabled={false}
       />
 
       <IconButton

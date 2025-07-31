@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { TablesUpdate } from "@/types/database.types";
 
 export const getTodos = async () => {
   const { data } = await supabase
@@ -29,6 +30,17 @@ export const getPaginatedTodos = async ({
 
 export const createTodo = async (text: string) => {
   const { data } = await supabase.from("todos").insert({ text }).throwOnError();
+
+  return data;
+};
+
+export const updateTodo = async (id: number, text: string) => {
+  const { data } = await supabase
+    .from("todos")
+    .update({ text })
+    .eq("id", id)
+    .select()
+    .throwOnError();
 
   return data;
 };
